@@ -1,26 +1,33 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging
 import os
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-TOKEN = "ضع_التوكن_هنا"
-OWNER_ID = 5790968225  # ضع الايدي هنا
+# نجيب المتغيرات من Render Environment
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+USER_ID = os.getenv("USER_ID")
 
-logging.basicConfig(level=logging.INFO)
-
-def start(update, context):
-    update.message.reply_text("👋 البوت شغال!")
-
-def echo(update, context):
-    if update.message.from_user.id == OWNER_ID:
-        update.message.reply_text(f"✔️ وصلت رسالتك: {update.message.text}")
+# أمر /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if str(update.effective_user.id) == str(USER_ID):
+        await update.message.reply_text("✅ البوت شغال عندك يا صاحبي!")
     else:
-        update.message.reply_text("❌ انت مش المالك")
+        await update.message.reply_text("⛔ معندكش صلاحية تستعمل هذا البوت.")
 
-updater = Updater(TOKEN, use_context=True)
-dp = updater.dispatcher
+# أمر /ping
+async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🏓 Pong! البوت حي 🎉")
 
-dp.add_handler(CommandHandler("start", start))
-dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+def main():
+    # نربط البوت بالتوكن
+    app = Application.builder().token(BOT_TOKEN).build()
 
-updater.start_polling()
-updater.idle()
+    # نضيف الأوامر
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("ping", ping))
+
+    # نشغل البوت
+    print("🚀 البوت بدأ يشتغل...")
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
