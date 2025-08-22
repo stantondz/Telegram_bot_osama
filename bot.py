@@ -3,8 +3,8 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 # نجيب المتغيرات من Render Environment
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-USER_ID = os.getenv("USER_ID")
+BOT_TOKEN = os.getenv("8134988434:AAEm5gmJnQS2XYPYYMXSG2pDVUvDYNZq4u4")
+USER_ID = os.getenv("5790968225")
 
 # أمر /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
